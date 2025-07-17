@@ -1,0 +1,162 @@
+{
+  "name": "sujalbadaltelegram",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        380,
+        -40
+      ],
+      "id": "6ebeaf4c-bbb4-48cf-bf8c-af4c4ddf7def",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        740,
+        -40
+      ],
+      "id": "b4acf7ae-4bbb-4cd2-aaf2-e56cf400f5a5",
+      "name": "Send a text message",
+      "webhookId": "efc89bf1-ecad-48a1-8829-762e02d754f4",
+      "credentials": {
+        "telegramApi": {
+          "id": "0oDyRqTAu7wtHb0l",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -60
+      ],
+      "id": "49f12c96-6eac-499c-b2ec-9b130ef07e87",
+      "name": "Telegram Trigger",
+      "webhookId": "6e7ed979-3b44-4a5c-b254-3b71e78722f8",
+      "credentials": {
+        "telegramApi": {
+          "id": "0oDyRqTAu7wtHb0l",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        180
+      ],
+      "id": "35cfaa2b-1276-4f78-abda-c7acf5528ce8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "B7YqVKK0lwiIT9h1",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        560,
+        200
+      ],
+      "id": "a1e6a695-86ff-46c4-86c9-ceef60953cd2",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "AQghAIxbBJ28oGvg",
+          "name": "SerpAPI account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "18aeff9e-a6e6-4eac-a69c-5fb266871d39",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23d6e706673909dcc5c2ae4a0ad429f27ffbf2e14065e359476bc69512497c9c"
+  },
+  "id": "PAPN5afsOuqjjGmz",
+  "tags": []
+}
