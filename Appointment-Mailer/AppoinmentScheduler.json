@@ -1,0 +1,148 @@
+{
+  "name": "AppoinmentScheduler",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Appoinment",
+        "formDescription": "We will send appoinment detail through email automatically.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date",
+              "fieldType": "date"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "6c5e0843-9bc4-4d92-a687-c49ffc652fad",
+      "name": "On form submission",
+      "webhookId": "a5ad5db8-78d7-44fa-899d-270f8337afdd"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "14b8ae28-e0ea-4018-8482-cbf4bbe9f821",
+              "leftValue": "={{ $json.Date }}",
+              "rightValue": "2025-07-25T00:00:00",
+              "operator": {
+                "type": "dateTime",
+                "operation": "beforeOrEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -200,
+        0
+      ],
+      "id": "457f7f93-c042-4708-85ba-943caf0a57e0",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        140
+      ],
+      "id": "9e85b89e-0f36-47fe-b60a-276372fa94b5",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Email }}",
+        "subject": "Confirmation of appoinment",
+        "message": "=Hii {{ $json.Name }}  your appoinment for the date is  \n{{ $json.Date }}\n\nThank you for availing our online  facility.Your appoinment is confirmed.\n\nPlease come before 30 minutes of appoinment timing.\nWe look forward to meeting you!\n\nBest regards,\nXYZ Hospital ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        200,
+        -40
+      ],
+      "id": "77f7f844-2c23-4025-9209-b7d3e6fd366f",
+      "name": "Send a message",
+      "webhookId": "84eb6ebe-7b16-4996-88fb-85679a9dd3a9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "a2lm3PCC8nYZpwbM",
+          "name": "Gmail account 7"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "571f8842-1c96-422b-983c-b894c6657267",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23d6e706673909dcc5c2ae4a0ad429f27ffbf2e14065e359476bc69512497c9c"
+  },
+  "id": "skRedJZdpnQfW6Id",
+  "tags": []
+}
