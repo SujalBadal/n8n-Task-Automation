@@ -22,5 +22,6 @@ This project is a simple Telegram bot created using **n8n**. When someone sends 
 3. Set Telegram credentials.
 4. Activate the workflow and test the bot.
 
-## ✨ Author
-Made by Suajal Badal
+## DemoScreenShot
+![Bot Sample](screenshot/Bot.png)
+![Workflow](screenshot/workflow.png)
