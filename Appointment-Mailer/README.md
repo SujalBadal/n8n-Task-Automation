@@ -25,5 +25,5 @@ This n8n workflow allows users to submit an appointment form. When a user submit
 - **NoOp (fallback if date doesn't match)**
 
 ## 📸 Demo Screenshot
-![Workflow Screenshot](./screenshots.png)
+![](./screenshots./emailsample.png ) ![](./emailsample.png)
 
