@@ -1,0 +1,118 @@
+{
+  "name": "Geminichatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        -120
+      ],
+      "id": "1004daee-36d8-4e1b-b1d1-35c1c5ed93de",
+      "name": "When chat message received",
+      "webhookId": "b4c8ac3b-aa4f-41bf-8803-6d960a85bcf5"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        80
+      ],
+      "id": "7e31475a-2560-4a70-b2a5-83bf234f23f4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4YecI6NU6nYkG9fk",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        -120
+      ],
+      "id": "8e34759c-fb42-4fcf-a4f4-5c90e1ec4a36",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        120
+      ],
+      "id": "98231ac9-64af-4506-b087-f5e3e1a0a850",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "SUln5sRhBWEc3qMM",
+          "name": "SerpAPI account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "52c175c0-f68a-4ccc-851d-da7391fb1155",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23d6e706673909dcc5c2ae4a0ad429f27ffbf2e14065e359476bc69512497c9c"
+  },
+  "id": "HjwhFoOUKbV6DI2G",
+  "tags": []
+}
