@@ -23,5 +23,5 @@ This project is a simple Telegram bot created using **n8n**. When someone sends 
 4. Activate the workflow and test the bot.
 
 ## DemoScreenShot
-![Bot Sample](screenshot/Bot.png)
-![Workflow](screenshot/workflow.png)
+![Bot Sample](screenshots/Bot.png)
+![Workflow](screenshots/workflow.png)
