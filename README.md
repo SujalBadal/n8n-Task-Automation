@@ -11,6 +11,8 @@ Each folder represents a different task automation such as sending emails, auto-
 - Telegram Auto-Reply Bot – Replies to messages on Telegram
 - Google-Gemini-Chatbot – Chatbot built using Google Gemini API
 - AI Resume Filter – Filters and emails shortlisted or rejected candidates
+- RoastMaster AI – A fun AI bot that roasts users on command
+- Telegram HTML Validator & Email Notifier – Validates HTML tags used in Telegram messages
 
 ## How to Use
 
