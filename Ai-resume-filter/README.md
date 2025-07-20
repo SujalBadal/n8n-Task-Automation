@@ -29,5 +29,5 @@ It analyzes resumes submitted via chatbot, checks for **Node.js** knowledge, and
 
 ![workflowOfSelection](screenshots/workflowOfSelection.png)
 ![workflowOfRejection](screenshots/workflowOfRejection.png)
-![Interviewmail](screenshots/Interviewmail.png)
-![Rejectionmail](screenshots/Rejectionmail.png)
+![Interviewmail](screenshots/Interviewmail.jpg)
+![Rejectionmail](screenshots/Rejectionmail.jpg)
