@@ -1,0 +1,319 @@
+{
+  "name": "ai-resume-filter",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1240,
+        -20
+      ],
+      "id": "0e944d68-0474-45d3-a213-37774d71d5aa",
+      "name": "When chat message received",
+      "webhookId": "9ec1179f-8ef4-48ca-9fe7-9c5722cdf4da"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "analyze the incoming resume content to see the candidate is suitable for node js then return YES. else return NO. \ndo not return anything else other than one word YES or NO."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        -20
+      ],
+      "id": "11658f53-a386-46c1-a147-bf87853b7214",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "01d1540c-3b7b-4904-bb83-14f81e69715d",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -460,
+        100
+      ],
+      "id": "9094f469-b07c-4f7b-82c8-e0844358b87c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        180
+      ],
+      "id": "4f8b9f81-d419-49ab-b80e-ccacd2bb686f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "B7YqVKK0lwiIT9h1",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "based on the incoming message in user prompt create email body for interview scheduler email"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -260,
+        -240
+      ],
+      "id": "08ff9d5c-7d1d-4b7f-b4c5-eb49e70076df",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -60
+      ],
+      "id": "d813a30c-4a87-48b3-86a4-ec4ad6c3e3f9",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "B7YqVKK0lwiIT9h1",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "based on the incoming message in user prompt create email body for rejection scheduler email. do not give anything else . no hello and thank you"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -140,
+        20
+      ],
+      "id": "f1b8376d-fb56-47d1-b611-7525668f6784",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        260
+      ],
+      "id": "0be18c29-9fe2-4a2f-b8ce-a52fa914a6a0",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "B7YqVKK0lwiIT9h1",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "badalsujalbadal@gmail.com",
+        "subject": "For interview",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        340,
+        -240
+      ],
+      "id": "26402ebb-e9c7-40e7-b3ab-3b445fc60528",
+      "name": "Send a message",
+      "webhookId": "58e63121-bbf6-431e-8946-eadf2d91f940",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "a2lm3PCC8nYZpwbM",
+          "name": "Gmail account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "badalsujalbadal@gmail.com",
+        "subject": "Resume rejection",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        360,
+        -20
+      ],
+      "id": "2666c917-db50-4ee0-9c9f-774ecd8c8f18",
+      "name": "Send a message1",
+      "webhookId": "31494623-ba1f-4475-943d-8dd9807ede92",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "a2lm3PCC8nYZpwbM",
+          "name": "Gmail account 7"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0d31df41-c322-4392-9c3a-c981de897c38",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23d6e706673909dcc5c2ae4a0ad429f27ffbf2e14065e359476bc69512497c9c"
+  },
+  "id": "WwjdrIDDcjcEoDeJ",
+  "tags": []
+}
