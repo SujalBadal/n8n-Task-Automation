@@ -1,0 +1,203 @@
+{
+  "name": "RoastMasterGPT",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -680,
+        240
+      ],
+      "id": "e0eca060-1839-4ae9-910f-4fc1d3864be0",
+      "name": "When chat message received",
+      "webhookId": "0c8d3fc2-a269-4d54-9626-41e20235fc94"
+    },
+    {
+      "parameters": {
+        "url": " 71d622488e1145969c13ffc4fb6c697c",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "flop"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": " x-api-key",
+              "value": "71d622488e1145969c13ffc4fb6c697c"
+            }
+          ]
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "paginationMode": "responseContainsNextURL",
+              "nextURL": "=https://api.twitterapi.io/twitter/tweet/advanced_search?query=flop&cursor={{ $response.body.next_cursor }}\n",
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ $response.body.has_next_page === false }}\n",
+              "limitPagesFetched": true,
+              "maxRequests": 1
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        220
+      ],
+      "id": "24511e72-50fd-4a2c-871d-c4414dbdfa6c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ Initialize an empty array to collect all tweets\nlet allTweets = [];\n\n// ✅ Loop through each input item\nfor (let item of $input.all()) {\n  if (item.json.tweets && Array.isArray(item.json.tweets)) {\n    allTweets = allTweets.concat(item.json.tweets);\n  }\n}\n\n// ✅ Helper: Format date to readable string\nfunction formatDate(dateString) {\n  if (!dateString) return '';\n  try {\n    const date = new Date(dateString);\n    return date.toLocaleString('en-US', {\n      year: 'numeric',\n      month: 'long',\n      day: 'numeric',\n      hour: '2-digit',\n      minute: '2-digit',\n    });\n  } catch (error) {\n    console.log(\"Error formatting date:\", error);\n    return dateString;\n  }\n}\n\n// ✅ Remove duplicates by tweet ID\nconst seen = new Set();\nconst uniqueTweets = [];\n\nfor (const tweet of allTweets) {\n  const id = tweet.id;\n  if (!seen.has(id)) {\n    seen.add(id);\n    uniqueTweets.push(tweet);\n  }\n}\n\n// ✅ Format tweets nicely\nconst formattedTweets = uniqueTweets.map(tweet => ({\n  json: {\n    tweetId: tweet.id || '',\n    url: tweet.url || '',\n    content: tweet.text || '',\n    likeCount: tweet.likeCount || 0,\n    retweetCount: tweet.retweetCount || 0,\n    replyCount: tweet.replyCount || 0,\n    quoteCount: tweet.quoteCount || 0,\n    viewCount: tweet.viewCount || 0,\n    bookmarkCount: tweet.bookmarkCount || 0,\n    createdAt: formatDate(tweet.createdAt),\n  }\n}));\n\n// ✅ Output as separate items\nreturn formattedTweets;\n\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        220
+      ],
+      "id": "d8c8462f-7e87-4c7c-8448-3ecdf3226f10",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        360,
+        520
+      ],
+      "id": "db222f8b-21c6-45e9-9623-8d04b6efc005",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "B7YqVKK0lwiIT9h1",
+          "name": "Google Gemini(PaLM) Api account 5"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a savage and sarcastic Twitter expert bot. Given the tweet below, write a short, witty, and brutal one-liner reply. Make it sound like a viral roast.\n\nTweet:\n\"{{ $json.content }}\"\n\nReply only with the one-liner. No explanations. No extra formatting.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        340,
+        200
+      ],
+      "id": "24ee3036-89fb-43b0-84aa-42c9e97deae8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        540,
+        520
+      ],
+      "id": "d6caafcb-6587-4bad-b3eb-4ac214b0bb6d",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "AQghAIxbBJ28oGvg",
+          "name": "SerpAPI account 4"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "de300476-4973-4b9b-bb6a-033a7eae3300",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23d6e706673909dcc5c2ae4a0ad429f27ffbf2e14065e359476bc69512497c9c"
+  },
+  "id": "hFYsFweatcYOvV2c",
+  "tags": []
+}
