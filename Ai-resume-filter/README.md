@@ -27,4 +27,7 @@ It analyzes resumes submitted via chatbot, checks for **Node.js** knowledge, and
 
 ## 📸 Workflow Preview
 
-![Workflow Preview](./selection-rejection-workflow.png)
+![workflowOfSelection](selection/workflowOfSelection.png)
+![workflowOfRejection](selection/workflowOfRejection.png)
+![Interviewmail](selection/Interviewmail.png)
+![Rejectionmail](selection/Rejectionmail.png)
